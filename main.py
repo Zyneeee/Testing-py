@@ -55,4 +55,10 @@ def fetch_quote():
         print(f"An error occurred while fetching quote: {e}")
         return "Sorry, I couldn't fetch a quote at the moment."
 
-client.run(os.getenv('BOT_TOKEN'))
+# Check if the script is being run directly
+if __name__ == "__main__":
+    # Get the port from the environment variable or use a default value
+    PORT = int(os.environ.get('PORT', 5000))
+
+    # Run the client on the specified port
+    client.run(os.getenv('BOT_TOKEN'), port=PORT)
