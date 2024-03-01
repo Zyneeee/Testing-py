@@ -1,4 +1,4 @@
-import discord.py
+import discord
 from requests import get
 from dotenv import load_dotenv
 import os
