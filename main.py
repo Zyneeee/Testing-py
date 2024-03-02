@@ -2,8 +2,28 @@ import discord
 from requests import get
 from dotenv import load_dotenv
 import os
+from flask import Flask, render_template
+from threading import Thread
 
 load_dotenv()  # Load environment variables from .env file
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return '''<body style="margin: 0; padding: 0;">
+    <iframe width="100%" height="100%" src="https://bot-status-phi.vercel.app/" frameborder="0" allowfullscreen></iframe>
+  </body>'''
+
+def run():
+    app.run(host='0.0.0.0', port=8080)
+
+def keep_alive():  
+    t = Thread(target=run)
+    t.start()
+
+keep_alive()
+print("Server Running Because of Zcy")
 
 intents = discord.Intents.default()
 intents.messages = True
@@ -54,14 +74,5 @@ def fetch_quote():
     except Exception as e:
         print(f"An error occurred while fetching quote: {e}")
         return "Sorry, I couldn't fetch a quote at the moment."
- def run():
-    app.run(host='0.0.0.0', port=8080)
-
-def keep_alive():  
-    t = Thread(target=run)
-    t.start()
-
-keep_alive()
-print("Server Running Because of Zcy")
 
 client.run(os.getenv('BOT_TOKEN'))
