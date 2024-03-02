@@ -54,5 +54,14 @@ def fetch_quote():
     except Exception as e:
         print(f"An error occurred while fetching quote: {e}")
         return "Sorry, I couldn't fetch a quote at the moment."
+ def run():
+    app.run(host='0.0.0.0', port=8080)
+
+def keep_alive():  
+    t = Thread(target=run)
+    t.start()
+
+keep_alive()
+print("Server Running Because of Zcy")
 
 client.run(os.getenv('BOT_TOKEN'))
