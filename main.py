@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import os
 from flask import Flask, render_template
 from threading import Thread
-from urllib.parse import quote
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -31,6 +30,10 @@ intents.messages = True
 
 client = discord.Client(intents=intents)
 
+# Global flags to track whether a command is currently being processed
+fetching_quote = False
+fetching_pickup_line = False
+
 @client.event
 async def on_ready():
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="You Having fun"))
@@ -38,19 +41,25 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    global fetching_quote, fetching_pickup_line  # Declare global variables
+
     if message.author == client.user:
         return
 
-    if 'rizz' in message.content.lower():
+    if 'rizz' in message.content.lower() and not fetching_pickup_line:
+        fetching_pickup_line = True
         pickup_line = fetch_pickup_line()
         if pickup_line:
             await message.channel.send(pickup_line)
         else:
             await message.channel.send("I'm sorry, I couldn't fetch a pickup line at the moment. Can you try again later?")
+        fetching_pickup_line = False
 
-    if 'quote' in message.content.lower():
+    if 'quote' in message.content.lower() and not fetching_quote:
+        fetching_quote = True
         quote = fetch_quote()
         await message.channel.send(quote)
+        fetching_quote = False
 
 def fetch_pickup_line():
     try:
@@ -68,9 +77,7 @@ def fetch_quote():
             if data and len(data) > 0:
                 quote_text = data[0]['q']
                 quote_author = data[0]['a']
-                # Use quote function to URL encode the quote text
-                quoted_text = quote(quote_text)
-                return f"{quoted_text} - {quote_author}"
+                return f"{quote_text} - {quote_author}"
             else:
                 return "Sorry, no quote found."
         else:
