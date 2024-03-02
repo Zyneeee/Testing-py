@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 from flask import Flask, render_template
 from threading import Thread
+from urllib.parse import quote
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -65,8 +66,11 @@ def fetch_quote():
         if response.status_code == 200:
             data = response.json()
             if data and len(data) > 0:
-                quote = data[0]['q'] + " - " + data[0]['a']
-                return quote
+                quote_text = data[0]['q']
+                quote_author = data[0]['a']
+                # Use quote function to URL encode the quote text
+                quoted_text = quote(quote_text)
+                return f"{quoted_text} - {quote_author}"
             else:
                 return "Sorry, no quote found."
         else:
