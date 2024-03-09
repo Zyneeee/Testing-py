@@ -1,4 +1,5 @@
 import discord
+from discord import Intents
 import aiohttp
 import asyncio
 from dotenv import load_dotenv
