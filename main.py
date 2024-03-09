@@ -5,8 +5,10 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
+intents = Intents.default()
+intents.messages = True  # Enable the message intent
 
-client = discord.Client()
+client = discord.Client(intents=intents)
 
 async def fetch_pickup_line():
     try:
