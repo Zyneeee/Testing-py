@@ -57,4 +57,4 @@ async def on_message(message):
         quote = await fetch_quote()
         await message.channel.send(quote)
 
-client.run(os.getenv('BOT_TOKEN'))
+client.run(os.getenv('TOKEN'))
